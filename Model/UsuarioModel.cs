@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using System_Erp.Enum;
 
 namespace System_Erp.Model
 {
@@ -30,9 +31,20 @@ namespace System_Erp.Model
         [Required(ErrorMessage = "O número de telefone é obrigatório.")]
         [RegularExpression(@"^\d{10,11}$", ErrorMessage = "O número de telefone deve ter entre 10 E 11 dígitos.")]
         public string NumeroTelefone { get; set; }
-        public DateTime CriacaoConta { get; set; } = DateTime.Now;
+        
+        [Required(ErrorMessage = "É necessario preencher o campo peso")]
+        public double Peso { get; set; }
 
+        [Required(ErrorMessage = "É necessario preencher o campo peso")]
+        public double Altura { get; set; }
+        public string? Alergias { get; set; }
+        public DateTime AtualizacaoDeInformacoes { get; set; } = DateTime.Now;
+        public DateTime CriacaoConta { get; set; } = DateTime.Now;
         public byte[] PasswordHash {get; set; }
         public byte[] PasswordSalt { get; set; }
+        
+        public CargoUsuario CargoDoUsuario { get; set; }
+        public EspecialidadeMedica EspecialidadeDoMedico { get; set; }
+        public List<SolicitacaoDeCargo> SolicitacaoCargo { get; set; } = new List<SolicitacaoDeCargo>();
     }
 }
