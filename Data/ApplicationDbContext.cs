@@ -14,5 +14,16 @@ namespace System_Erp.Data
         }
 
         public DbSet<UsuarioModel> Usuarios { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<UsuarioModel>()
+                 .Property(u => u.CargoDoUsuario)
+                .HasConversion<string>();
+        }
+
     }
+    
 }
