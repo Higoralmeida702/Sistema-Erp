@@ -12,8 +12,8 @@ using System_Erp.Data;
 namespace System_Erp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241129164853_AtualizaTabelaUsuarios")]
-    partial class AtualizaTabelaUsuarios
+    [Migration("20241204203541_AddTabelasDeSolicitacoes")]
+    partial class AddTabelasDeSolicitacoes
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,8 +39,9 @@ namespace System_Erp.Migrations
                     b.Property<DateTime>("DataSolicitacao")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UsuarioId")
                         .HasColumnType("int");
@@ -49,7 +50,35 @@ namespace System_Erp.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("SolicitacaoDeCargo");
+                    b.ToTable("SolicitacoesDeCargos");
+                });
+
+            modelBuilder.Entity("System_Erp.Model.SolicitacaoEspecialidadeMedica", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CargoSolicitado")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DataSolicitacao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("SolicitacoesEspecialidadeMedica");
                 });
 
             modelBuilder.Entity("System_Erp.Model.UsuarioModel", b =>
@@ -122,6 +151,17 @@ namespace System_Erp.Migrations
                 {
                     b.HasOne("System_Erp.Model.UsuarioModel", "Usuario")
                         .WithMany("SolicitacaoCargo")
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("System_Erp.Model.SolicitacaoEspecialidadeMedica", b =>
+                {
+                    b.HasOne("System_Erp.Model.UsuarioModel", "Usuario")
+                        .WithMany()
                         .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
