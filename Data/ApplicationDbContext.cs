@@ -15,12 +15,22 @@ namespace System_Erp.Data
 
         public DbSet<UsuarioModel> Usuarios { get; set; }
 
+        public DbSet<SolicitacaoDeCargo> SolicitacoesDeCargos { get; set; }
+        public DbSet<SolicitacaoEspecialidadeMedica> SolicitacoesEspecialidadeMedica { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<UsuarioModel>()
-                 .Property(u => u.CargoDoUsuario)
+                .Property(u => u.CargoDoUsuario)
+                .HasConversion<string>();
+
+            modelBuilder.Entity<SolicitacaoDeCargo>()
+                .Property(s => s.Status)
+                .HasConversion<string>();
+
+            modelBuilder.Entity<SolicitacaoEspecialidadeMedica>()
+                .Property(s => s.Status)
                 .HasConversion<string>();
         }
 
