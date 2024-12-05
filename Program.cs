@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using System_Erp.Data;
+using System_Erp.Services;
 using System_Erp.Services.AuthService;
 using System_Erp.Services.SenhaService;
 
@@ -49,6 +50,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 builder.Services.AddScoped<IUsuarioAuthService, UsuarioAuthService>();
 builder.Services.AddScoped<ISenhaService, SenhaService>();
 builder.Services.AddScoped<IAdministradorAccountService, AdministradorAccountService>();
+builder.Services.AddScoped<ISolicitacoesCargoService, SolicitacoesCargoService>();
 
 var app = builder.Build();
 
