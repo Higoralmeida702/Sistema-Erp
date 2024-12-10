@@ -44,7 +44,8 @@ namespace System_Erp.Model
         public byte[] PasswordSalt { get; set; }
         
         public CargoUsuario CargoDoUsuario { get; set; }
-        public EspecialidadeMedica EspecialidadeDoMedico { get; set; }
         public List<SolicitacaoDeCargo> SolicitacaoCargo { get; set; } = new List<SolicitacaoDeCargo>();
+        public List<EspecialidadeMedica> EspecialidadeDoMedico { get; set; } = new List<EspecialidadeMedica>();
+
     }
 }
