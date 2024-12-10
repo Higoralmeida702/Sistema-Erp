@@ -19,28 +19,32 @@ namespace System_Erp.Services
             _context = context;
         }
 
-        public async Task<Resposta<string>> AprovarEspecilidadeMedica (int especialidadeId, bool aprovado)
+        public async Task<Resposta<string>> AprovarEspecilidadeMedica(int especialidadeId, bool aprovado)
         {
             var solicitacao = await _context.SolicitacoesEspecialidadeMedica.FindAsync(especialidadeId);
             if (solicitacao == null)
             {
-                return new Resposta<string> { Status = false, Mensagem = "Solicitação não encontrada"};
+                return new Resposta<string> { Status = false, Mensagem = "Solicitação não encontrada" };
             }
+
             solicitacao.Status = aprovado ? Status.Aprovado : Status.Rejeitado;
 
-            if (aprovado) 
+            if (aprovado)
             {
                 var usuario = await _context.Usuarios.FindAsync(solicitacao.UsuarioId);
                 if (usuario != null)
                 {
-                    usuario.EspecialidadeDoMedico = solicitacao.CargoSolicitado; 
+                    usuario.EspecialidadeDoMedico.Add(solicitacao.CargoSolicitado);
                 }
 
                 _context.SolicitacoesEspecialidadeMedica.Update(solicitacao);
                 await _context.SaveChangesAsync();
             }
-                return new Resposta<string> { Status = true, Mensagem = aprovado ? "Solicitação aprovada" : "Solicitação rejeitada"};
+
+            return new Resposta<string> { Status = true, Mensagem = aprovado ? "Solicitação aprovada" : "Solicitação rejeitada" };
         }
+
+
 
         public async Task<Resposta<string>> AprovarSolicitacaoNovoCargo(int solicitacaoId, bool aprovado)
         {
@@ -112,7 +116,7 @@ namespace System_Erp.Services
                 Status = Status.Pendente
             };
 
-            _context.SolicitacoesDeCargos.Add(solicitacao);
+            _context.SolicitacoesDeCargos.AddAsync(solicitacao);
             await _context.SaveChangesAsync();
 
             return new Resposta<string> {Status = true, Mensagem = "Solicitação enviada"};
