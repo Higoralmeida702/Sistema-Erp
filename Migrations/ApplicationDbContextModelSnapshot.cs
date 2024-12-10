@@ -22,6 +22,34 @@ namespace System_Erp.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("System_Erp.Model.Agendamento", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DataHora")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MedicoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PacienteId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MedicoId")
+                        .HasDatabaseName("IX_Agendamentos_MedicoId");
+
+                    b.HasIndex("PacienteId")
+                        .HasDatabaseName("IX_Agendamentos_PacienteId");
+
+                    b.ToTable("Agendamentos");
+                });
+
             modelBuilder.Entity("System_Erp.Model.SolicitacaoDeCargo", b =>
                 {
                     b.Property<int>("Id")
@@ -36,8 +64,9 @@ namespace System_Erp.Migrations
                     b.Property<DateTime>("DataSolicitacao")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UsuarioId")
                         .HasColumnType("int");
@@ -46,7 +75,35 @@ namespace System_Erp.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("SolicitacaoDeCargo");
+                    b.ToTable("SolicitacoesDeCargos");
+                });
+
+            modelBuilder.Entity("System_Erp.Model.SolicitacaoEspecialidadeMedica", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CargoSolicitado")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DataSolicitacao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("SolicitacoesEspecialidadeMedica");
                 });
 
             modelBuilder.Entity("System_Erp.Model.UsuarioModel", b =>
@@ -82,8 +139,9 @@ namespace System_Erp.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("EspecialidadeDoMedico")
-                        .HasColumnType("int");
+                    b.Property<string>("EspecialidadeDoMedico")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -115,10 +173,40 @@ namespace System_Erp.Migrations
                     b.ToTable("Usuarios");
                 });
 
+            modelBuilder.Entity("System_Erp.Model.Agendamento", b =>
+                {
+                    b.HasOne("System_Erp.Model.UsuarioModel", "Medico")
+                        .WithMany()
+                        .HasForeignKey("MedicoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("System_Erp.Model.UsuarioModel", "Paciente")
+                        .WithMany()
+                        .HasForeignKey("PacienteId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Medico");
+
+                    b.Navigation("Paciente");
+                });
+
             modelBuilder.Entity("System_Erp.Model.SolicitacaoDeCargo", b =>
                 {
                     b.HasOne("System_Erp.Model.UsuarioModel", "Usuario")
                         .WithMany("SolicitacaoCargo")
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("System_Erp.Model.SolicitacaoEspecialidadeMedica", b =>
+                {
+                    b.HasOne("System_Erp.Model.UsuarioModel", "Usuario")
+                        .WithMany()
                         .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

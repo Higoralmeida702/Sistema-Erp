@@ -12,8 +12,8 @@ using System_Erp.Data;
 namespace System_Erp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241204203541_AddTabelasDeSolicitacoes")]
-    partial class AddTabelasDeSolicitacoes
+    [Migration("20241210032741_AddTabelaAgendamentos")]
+    partial class AddTabelaAgendamentos
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,34 @@ namespace System_Erp.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("System_Erp.Model.Agendamento", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DataHora")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MedicoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PacienteId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MedicoId")
+                        .HasDatabaseName("IX_Agendamentos_MedicoId");
+
+                    b.HasIndex("PacienteId")
+                        .HasDatabaseName("IX_Agendamentos_PacienteId");
+
+                    b.ToTable("Agendamentos");
+                });
 
             modelBuilder.Entity("System_Erp.Model.SolicitacaoDeCargo", b =>
                 {
@@ -114,8 +142,9 @@ namespace System_Erp.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("EspecialidadeDoMedico")
-                        .HasColumnType("int");
+                    b.Property<string>("EspecialidadeDoMedico")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -145,6 +174,25 @@ namespace System_Erp.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Usuarios");
+                });
+
+            modelBuilder.Entity("System_Erp.Model.Agendamento", b =>
+                {
+                    b.HasOne("System_Erp.Model.UsuarioModel", "Medico")
+                        .WithMany()
+                        .HasForeignKey("MedicoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("System_Erp.Model.UsuarioModel", "Paciente")
+                        .WithMany()
+                        .HasForeignKey("PacienteId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Medico");
+
+                    b.Navigation("Paciente");
                 });
 
             modelBuilder.Entity("System_Erp.Model.SolicitacaoDeCargo", b =>

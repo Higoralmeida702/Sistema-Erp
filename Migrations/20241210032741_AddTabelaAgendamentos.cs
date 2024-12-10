@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace System_Erp.Migrations
 {
     /// <inheritdoc />
-    public partial class AddTabelasDeSolicitacoes : Migration
+    public partial class AddTabelaAgendamentos : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -30,11 +30,37 @@ namespace System_Erp.Migrations
                     PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
                     PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
                     CargoDoUsuario = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EspecialidadeDoMedico = table.Column<int>(type: "int", nullable: false)
+                    EspecialidadeDoMedico = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Usuarios", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Agendamentos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PacienteId = table.Column<int>(type: "int", nullable: false),
+                    MedicoId = table.Column<int>(type: "int", nullable: false),
+                    DataHora = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Agendamentos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Agendamentos_Usuarios_MedicoId",
+                        column: x => x.MedicoId,
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Agendamentos_Usuarios_PacienteId",
+                        column: x => x.PacienteId,
+                        principalTable: "Usuarios",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -82,6 +108,16 @@ namespace System_Erp.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Agendamentos_MedicoId",
+                table: "Agendamentos",
+                column: "MedicoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Agendamentos_PacienteId",
+                table: "Agendamentos",
+                column: "PacienteId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SolicitacoesDeCargos_UsuarioId",
                 table: "SolicitacoesDeCargos",
                 column: "UsuarioId");
@@ -95,6 +131,9 @@ namespace System_Erp.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Agendamentos");
+
             migrationBuilder.DropTable(
                 name: "SolicitacoesDeCargos");
 
