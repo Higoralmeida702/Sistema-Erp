@@ -51,6 +51,7 @@ builder.Services.AddScoped<IUsuarioAuthService, UsuarioAuthService>();
 builder.Services.AddScoped<ISenhaService, SenhaService>();
 builder.Services.AddScoped<IAdministradorAccountService, AdministradorAccountService>();
 builder.Services.AddScoped<ISolicitacoesCargoService, SolicitacoesCargoService>();
+builder.Services.AddScoped<IAgendamentoService, AgendamentoService>();
 
 var app = builder.Build();
 
