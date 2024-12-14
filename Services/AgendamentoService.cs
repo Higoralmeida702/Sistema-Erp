@@ -71,19 +71,19 @@ namespace System_Erp.Services
             return diasDiponiveis;
         }
 
-     public async Task<List<InfoMedicoDto>> ObterMedicosPorCargo(EspecialidadeMedica especialidadeMedica)
-{
-    return await _context.Usuarios
-        .Where(u => u.EspecialidadeDoMedico.Contains(especialidadeMedica)) // Verifica se a lista contém a especialidade
-        .Select(u => new InfoMedicoDto
+        public async Task<List<InfoMedicoDto>> ObterMedicosPorCargo(EspecialidadeMedica especialidadeMedica)
         {
-            Nome = u.Nome,
-            Sobrenome = u.Sobrenome,
-            Email = u.Email,
-            NumeroTelefone = u.NumeroTelefone,
-            EspecialidadeMedica = string.Join(", ", u.EspecialidadeDoMedico)
-        })
-        .ToListAsync();
-}
+            return await _context.Usuarios
+                .Where(u => u.EspecialidadeDoMedico.Contains(especialidadeMedica)) 
+                .Select(u => new InfoMedicoDto
+                {
+                    Nome = u.Nome,
+                    Sobrenome = u.Sobrenome,
+                    Email = u.Email,
+                    NumeroTelefone = u.NumeroTelefone,
+                    EspecialidadeMedica = string.Join(", ", u.EspecialidadeDoMedico)
+                })
+                .ToListAsync();
+        }
     }
 }
