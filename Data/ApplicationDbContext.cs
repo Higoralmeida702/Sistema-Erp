@@ -17,6 +17,7 @@ namespace System_Erp.Data
 
         public DbSet<SolicitacaoDeCargo> SolicitacoesDeCargos { get; set; }
         public DbSet<SolicitacaoEspecialidadeMedica> SolicitacoesEspecialidadeMedica { get; set; }
+        public DbSet<Agendamento> Agendamentos { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -32,6 +33,20 @@ namespace System_Erp.Data
             modelBuilder.Entity<SolicitacaoEspecialidadeMedica>()
                 .Property(s => s.Status)
                 .HasConversion<string>();
+
+             modelBuilder.Entity<Agendamento>()
+                .HasIndex(a => a.PacienteId)
+                .HasDatabaseName("IX_Agendamentos_PacienteId");
+
+            modelBuilder.Entity<Agendamento>()
+                .HasIndex(a => a.MedicoId)
+                .HasDatabaseName("IX_Agendamentos_MedicoId");
+                
+            modelBuilder.Entity<Agendamento>()
+                .HasOne(a => a.Paciente) 
+                .WithMany()  
+                .HasForeignKey(a => a.PacienteId)
+                .OnDelete(DeleteBehavior.NoAction);   
         }
 
     }
