@@ -9,6 +9,9 @@ namespace System_Erp.Enum
     {
         Aprovado,
         Rejeitado,
-        Pendente
+        Pendente,
+        Cancelado,
+        EmAndamento
+        
     }
 }
