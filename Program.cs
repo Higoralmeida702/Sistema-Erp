@@ -52,6 +52,7 @@ builder.Services.AddScoped<ISenhaService, SenhaService>();
 builder.Services.AddScoped<IAdministradorAccountService, AdministradorAccountService>();
 builder.Services.AddScoped<ISolicitacoesCargoService, SolicitacoesCargoService>();
 builder.Services.AddScoped<IAgendamentoService, AgendamentoService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 var app = builder.Build();
 
