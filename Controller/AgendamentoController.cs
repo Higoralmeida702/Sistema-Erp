@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System_Erp.Dto;
 using System_Erp.Enum;
@@ -21,6 +22,7 @@ namespace System_Erp.Controller
         }
 
         [HttpGet("medicos/{especialidadeMedica}")]
+        [Authorize]
         public async Task<ActionResult<List<InfoMedicoDto>>> ObterMedicosPorCargo (EspecialidadeMedica especialidadeMedica)
         {
             var medicos = await _agendamento.ObterMedicosPorCargo(especialidadeMedica);
@@ -32,6 +34,7 @@ namespace System_Erp.Controller
         }
 
         [HttpGet("DiasDisponiveis/{medicoId}")]
+        [Authorize]
         public async Task<ActionResult<List<DateTime>>> ObterDiasDisponiveis (int medicoId, int diasAntecipacao = 30)
         {
             var diasDisponiveis = await _agendamento.ObterDiasDisponiveis(medicoId, diasAntecipacao);
@@ -43,6 +46,7 @@ namespace System_Erp.Controller
         }
 
         [HttpPost("agendar")]
+        [Authorize]
         public async Task<ActionResult> AgendarConsulta (AgendamentoDto agendamentoDto)
         {
             if (agendamentoDto == null)
@@ -58,5 +62,20 @@ namespace System_Erp.Controller
 
             return Ok("Consulta agendada com sucesso.");
         }
+
+        [HttpPost("cancelar/{agendamentoId}")]
+        [Authorize(Roles = "Administrador,Medico")]
+
+        public async Task<ActionResult> CancelarConsulta(int agendamentoId)
+        {
+            var resultado = await _agendamento.CancelarConsulta(agendamentoId); // 
+
+            if (!resultado)
+            {
+                return BadRequest("Não foi possível cancelar o agendamento."); 
+            }
+
+            return Ok("Consulta cancelada e notificação enviada ao paciente.");
     }
+}
 }
