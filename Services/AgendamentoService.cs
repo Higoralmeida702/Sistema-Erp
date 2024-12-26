@@ -13,10 +13,12 @@ namespace System_Erp.Services
     public class AgendamentoService : IAgendamentoService
     {
         private readonly ApplicationDbContext _context;
+        private readonly IEmailService _emailService;
 
-        public AgendamentoService(ApplicationDbContext context)
+        public AgendamentoService(ApplicationDbContext context, IEmailService emailService)
         {
             _context = context;
+            _emailService = emailService;
         }
 
         public async Task<bool> AgendarConsulta(AgendamentoDto agendamentoDto)
@@ -33,7 +35,8 @@ namespace System_Erp.Services
             {
                 PacienteId = agendamentoDto.PacienteId,
                 MedicoId = agendamentoDto.MedicoId,
-                DataHora = agendamentoDto.DataHora
+                DataHora = agendamentoDto.DataHora,
+                Status = Status.EmAndamento
             };
 
             _context.Agendamentos.Add(agendamento);
@@ -84,6 +87,34 @@ namespace System_Erp.Services
                     EspecialidadeMedica = string.Join(", ", u.EspecialidadeDoMedico)
                 })
                 .ToListAsync();
+        }
+
+        public async Task<bool> CancelarConsulta(int agendamentoId)
+        {
+            var agendamento = await _context.Agendamentos
+                .Include(a => a.Paciente) 
+                .Include(a => a.Medico)
+                .FirstOrDefaultAsync(a => a.Id == agendamentoId);
+
+            if (agendamento == null)
+            {
+                return false;
+            }
+
+            await _emailService.EnviarEmail(
+            agendamento.Paciente.Email, 
+            "Notificação de Cancelamento de Consulta", 
+            $"Prezado(a) {agendamento.Paciente.Nome},\n\n" +
+            $"Informamos que, infelizmente, a consulta agendada com o(a) Dr(a). {agendamento.Medico.Nome} foi cancelada. Pedimos desculpas por qualquer transtorno que isso possa causar. Caso necessite de esclarecimentos adicionais ou deseje reagendar a consulta, por favor, entre em contato conosco por meio dos nossos canais de atendimento.\n\n" +
+            "Agradecemos a compreensão.\n\n" +
+            "Atenciosamente,\n" +
+            "[Projeto Academico]" 
+            );
+
+            agendamento.Status = Status.Cancelado;
+            await _context.SaveChangesAsync();
+
+            return true;
         }
     }
 }

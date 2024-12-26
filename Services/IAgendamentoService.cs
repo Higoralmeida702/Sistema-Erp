@@ -12,5 +12,6 @@ namespace System_Erp.Services
         Task<List<InfoMedicoDto>> ObterMedicosPorCargo (EspecialidadeMedica especialidadeMedica);
         Task<List<DateTime>> ObterDiasDisponiveis (int medicoId, int diasAntecipacao = 30);
         Task<bool> AgendarConsulta (AgendamentoDto agendamentoDto);
+        Task<bool> CancelarConsulta(int agendamentoId);
     }
 }
