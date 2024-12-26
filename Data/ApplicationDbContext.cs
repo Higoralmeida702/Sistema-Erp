@@ -47,6 +47,10 @@ namespace System_Erp.Data
                 .WithMany()  
                 .HasForeignKey(a => a.PacienteId)
                 .OnDelete(DeleteBehavior.NoAction);   
+
+             modelBuilder.Entity<Agendamento>()
+                .Property(s => s.Status)
+                .HasConversion<string>();    
         }
 
     }
