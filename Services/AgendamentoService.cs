@@ -23,8 +23,18 @@ namespace System_Erp.Services
 
         public async Task<bool> AgendarConsulta(AgendamentoDto agendamentoDto)
         {
+
             var consultaExistente = await _context.Agendamentos
                 .AnyAsync(a => a.MedicoId == agendamentoDto.MedicoId && a.DataHora == agendamentoDto.DataHora);
+
+                 var paciente = await _context.Usuarios.FindAsync(agendamentoDto.PacienteId);
+            var medico = await _context.Usuarios.FindAsync(agendamentoDto.MedicoId);
+
+               
+            if (paciente == null || medico == null)
+            {
+                throw new Exception("Paciente ou Médico não encontrado.");
+            }
                 
             if (consultaExistente)
             {
@@ -36,8 +46,22 @@ namespace System_Erp.Services
                 PacienteId = agendamentoDto.PacienteId,
                 MedicoId = agendamentoDto.MedicoId,
                 DataHora = agendamentoDto.DataHora,
-                Status = Status.EmAndamento
+                Status = Status.EmAndamento,
+                Paciente = paciente,
+                Medico = medico
             };
+
+           
+         
+            
+            await _emailService.EnviarEmail(
+            agendamento.Paciente.Email, 
+            "Notificação de Confirmação de consulta", 
+            $"Prezado(a) {agendamento.Paciente.Nome}, gostariamos de informar que sua consulta foi confirmada com sucesso\n\n" +
+            $"Estaremos esperando sua presença no dia {agendamento.DataHora}.\n\n" +
+            "Atenciosamente,\n" +
+            "[Projeto Academico]" 
+            );
 
             _context.Agendamentos.Add(agendamento);
             await _context.SaveChangesAsync();
