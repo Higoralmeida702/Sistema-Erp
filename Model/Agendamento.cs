@@ -27,5 +27,8 @@ namespace System_Erp.Model
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public Status Status { get; set; }
+
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public EspecialidadeMedica Especialidade { get; set; }
     }
 }
