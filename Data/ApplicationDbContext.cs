@@ -50,7 +50,11 @@ namespace System_Erp.Data
 
              modelBuilder.Entity<Agendamento>()
                 .Property(s => s.Status)
-                .HasConversion<string>();    
+                .HasConversion<string>();   
+
+            modelBuilder.Entity<Agendamento>()
+                .Property(s => s.Especialidade)
+                .HasConversion<string>(); 
         }
 
     }
