@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace System_Erp.Migrations
 {
     /// <inheritdoc />
-    public partial class AddTabelaAgendamentos : Migration
+    public partial class AddEspecificarEspecilidadeParaAgendamento : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -45,7 +45,9 @@ namespace System_Erp.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PacienteId = table.Column<int>(type: "int", nullable: false),
                     MedicoId = table.Column<int>(type: "int", nullable: false),
-                    DataHora = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    DataHora = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Especialidade = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -12,8 +12,8 @@ using System_Erp.Data;
 namespace System_Erp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241210032741_AddTabelaAgendamentos")]
-    partial class AddTabelaAgendamentos
+    [Migration("20250102032005_AddEspecificarEspecilidadeParaAgendamento")]
+    partial class AddEspecificarEspecilidadeParaAgendamento
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,11 +36,19 @@ namespace System_Erp.Migrations
                     b.Property<DateTime>("DataHora")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Especialidade")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("MedicoId")
                         .HasColumnType("int");
 
                     b.Property<int>("PacienteId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

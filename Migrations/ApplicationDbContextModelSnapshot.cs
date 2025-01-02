@@ -33,6 +33,10 @@ namespace System_Erp.Migrations
                     b.Property<DateTime>("DataHora")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Especialidade")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("MedicoId")
                         .HasColumnType("int");
 
