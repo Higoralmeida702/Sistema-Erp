@@ -46,6 +46,7 @@ namespace System_Erp.Services
                 PacienteId = agendamentoDto.PacienteId,
                 MedicoId = agendamentoDto.MedicoId,
                 DataHora = agendamentoDto.DataHora,
+                Especialidade = agendamentoDto.Especialidade,
                 Status = Status.EmAndamento,
                 Paciente = paciente,
                 Medico = medico
@@ -57,7 +58,16 @@ namespace System_Erp.Services
             await _emailService.EnviarEmail(
             agendamento.Paciente.Email, 
             "Notificação de Confirmação de consulta", 
-            $"Prezado(a) {agendamento.Paciente.Nome}, gostariamos de informar que sua consulta foi confirmada com sucesso\n\n" +
+            $"Prezado(a) {agendamento.Paciente.Nome}, gostariamos de informar que sua consulta de {agendamento.Especialidade} foi confirmada com sucesso, com o(a) Dr(a) {agendamento.Medico.Nome} \n\n" +
+            $"Estaremos esperando sua presença no dia {agendamento.DataHora}.\n\n" +
+            "Atenciosamente,\n" +
+            "[Projeto Academico]" 
+            );
+            
+            await _emailService.EnviarEmail(
+            agendamento.Medico.Email, 
+            "Notificação de Confirmação de consulta", 
+            $"Prezado(a) {agendamento.Medico.Nome}, gostariamos de informar que uma consulta foi confirmada para a paciente {agendamento.Paciente.Nome} para a especialidade {agendamento.Especialidade} com sucesso\n\n" +
             $"Estaremos esperando sua presença no dia {agendamento.DataHora}.\n\n" +
             "Atenciosamente,\n" +
             "[Projeto Academico]" 
@@ -129,10 +139,20 @@ namespace System_Erp.Services
             agendamento.Paciente.Email, 
             "Notificação de Cancelamento de Consulta", 
             $"Prezado(a) {agendamento.Paciente.Nome},\n\n" +
-            $"Informamos que, infelizmente, a consulta agendada com o(a) Dr(a). {agendamento.Medico.Nome} foi cancelada. Pedimos desculpas por qualquer transtorno que isso possa causar. Caso necessite de esclarecimentos adicionais ou deseje reagendar a consulta, por favor, entre em contato conosco por meio dos nossos canais de atendimento.\n\n" +
-            "Agradecemos a compreensão.\n\n" +
+            $"Informamos que, infelizmente, a consulta de {agendamento.Especialidade} agendada com o(a) Dr(a). {agendamento.Medico.Nome} foi cancelada. Pedimos desculpas por qualquer transtorno que isso possa causar. Caso necessite de esclarecimentos adicionais ou deseje reagendar a consulta, por favor, entre em contato conosco por meio dos nossos canais de atendimento.\n\n" +
+            "Agradecemos pela compreensão.\n\n" +
             "Atenciosamente,\n" +
-            "[Projeto Academico]" 
+            "[Projeto Acadêmico]"
+            );
+
+        await _emailService.EnviarEmail(
+            agendamento.Medico.Email, 
+            "Notificação de Cancelamento de Consulta", 
+            $"Prezado(a) Dr(a). {agendamento.Medico.Nome},\n\n" +
+            $"Informamos que, infelizmente, a consulta de {agendamento.Especialidade} agendada com o(a) paciente {agendamento.Paciente.Nome} foi cancelada. Pedimos desculpas por qualquer transtorno que isso possa causar. Caso necessite de esclarecimentos adicionais, por favor, entre em contato conosco por meio dos nossos canais de atendimento.\n\n" +
+            "Agradecemos pela compreensão.\n\n" +
+            "Atenciosamente,\n" +
+            "[Projeto Acadêmico]"
             );
 
             agendamento.Status = Status.Cancelado;
